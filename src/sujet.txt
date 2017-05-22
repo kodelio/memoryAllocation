@@ -4,3 +4,12 @@ Thèmes :
  - Allocation dynmaique de mémoire (malloc, free, realloc, calloc)
 
 Gestion de code source ? github ?
+
+Organisation des fichiers
+
+Déplacement de blocs mémoires (memcpy)
+
+
+Adresse de départ du heap
+
+
