@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "memory.h"
 
 /*
@@ -23,24 +24,17 @@ int main(int argc, char** argv)
 	char *ptr = memloc(sizeof(char) * 10);
 	char *other_ptr = memloc(sizeof(char) * 10);
 	char *third_ptr = memloc(sizeof(char) * 10);
-	ptr[0] = 'a';
-	ptr[1] = '\0';
-
-	other_ptr[0] = 'b';
-	other_ptr[1] = 'b';
-	other_ptr[2] = '\0';
-
-	third_ptr[0] = 'c';
-	third_ptr[1] = 'c';
-	third_ptr[2] = 'c';
-	third_ptr[3] = 'c';
-	third_ptr[3] = '\0';
+	memcpy(ptr, "1oucou", 7);
+	memcpy(other_ptr, "2oucou", 7);
+	memcpy(third_ptr, "3oucou", 7);
 
 
-	printf("First %p - second %p - third %p\n", ptr, other_ptr, third_ptr);
+	printf("First %s - second %s - third %s\n", ptr, other_ptr, third_ptr);
 	memfree(ptr);
-	ptr = memloc(sizeof(char) * 10);
-	printf("After calloc : %p\n", ptr);
+	ptr = memcalloc(sizeof(char) * 10);
+	printf("After calloc : %s\n", ptr);
+	other_ptr = memrealloc(other_ptr, sizeof(char) * 5);
+	printf("Realloc : %s\n", other_ptr);
 
 	return(EXIT_SUCCESS);
 }

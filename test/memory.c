@@ -45,7 +45,6 @@ char *memloc(size_t size)
 		pos = pos->next;
 	}
 	if (pos->free) {
-		printf("Address is %p\n", pos);
 		pos->free = 0;
 		pos->size = size;
 		return pos + 1;
@@ -63,13 +62,18 @@ char *memloc(size_t size)
 int memfree(char* ptr)
 {
 	s_block *metadata = ptr - sizeof(s_block);
-	printf("Metadata is at %p\n", metadata);
 	metadata->free = 1;
+	return 0;
 }
 
 char* memrealloc(char* ptr, size_t add)
 {
-
+	s_block *metadata = ptr - sizeof(s_block);
+	int block_size = metadata->size;
+	char *nw_addr = memloc(block_size + add);
+	memcpy(nw_addr, ptr, block_size);
+	memfree(ptr);
+	return nw_addr;
 }
 
 char *memcalloc(size_t size)
