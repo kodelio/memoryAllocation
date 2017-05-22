@@ -20,8 +20,6 @@ struct s_block {
 
 s_block *start = NULL;
 
-static int cursor_pos = 0;
-
 void memcpy(char *dest, char *src, size_t n)
 {
 	int steps = n / sizeof(char);
@@ -41,13 +39,16 @@ char *memloc(size_t size)
 
 	s_block *pos = start;
 	while (pos->next != NULL) {
+		if (pos->size == size && pos->free) {
+			break;
+		}
 		pos = pos->next;
 	}
 	if (pos->free) {
-		char *data_addr = &pos + sizeof(s_block);
+		printf("Address is %p\n", pos);
 		pos->free = 0;
 		pos->size = size;
-		return data_addr;
+		return pos + 1;
 	} else {
 		//Create a new
 		s_block *metadata = pos + pos->size;
@@ -55,14 +56,14 @@ char *memloc(size_t size)
 		metadata->next = NULL;
 		metadata->size = size;
 		pos->next = metadata;
-		return metadata + sizeof(s_block);
+		return metadata + 1;
 	}
 }
 
 int memfree(char* ptr)
 {
-	char *addr = ptr - sizeof(s_block);
-	s_block *metadata = addr;
+	s_block *metadata = ptr - sizeof(s_block);
+	printf("Metadata is at %p\n", metadata);
 	metadata->free = 1;
 }
 
