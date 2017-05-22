@@ -1,0 +1,6 @@
+Sujet du projet OS : 
+
+Thèmes :
+ - Allocation dynmaique de mémoire (malloc, free, realloc, calloc)
+
+Gestion de code source ? github ?
