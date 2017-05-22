@@ -25,7 +25,7 @@ extern screen_print_t* video_map;
 extern uint32_t cursor;
 
 
-void printf(const char *message, ...);
+void print(const char *message, ...);
 
 void put(char c);
 

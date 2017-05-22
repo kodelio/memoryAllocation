@@ -8,7 +8,7 @@
 
 #define HEAP_SIZE 1024
 
-char heap[HEAP_SIZE];
+char heap[1];
 
 typedef struct s_block s_block;
 
@@ -31,7 +31,7 @@ void memcp(char *dest, char *src, size_t n)
 char *memloc(size_t size)
 {
 	if (start == NULL) {
-		start = (s_block*) & heap[0];
+		start = (s_block*) 0x1024;
 		start->free = 1;
 		start->next = NULL;
 		start->size = 0;

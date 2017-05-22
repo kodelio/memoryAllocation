@@ -47,7 +47,7 @@ wait_scan_code:
 
 wait_key_release:
     in AL,0x60
-.repeat
+.repeat:
     in AL,0x64
     and AL,0x01
     jz .repeat

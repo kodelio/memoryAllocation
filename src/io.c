@@ -13,7 +13,7 @@ uint8_t *video = (uint8_t*) SCREEN_START;
 uint32_t cursor = 0;
 screen_print_t* video_map = (screen_print_t*) SCREEN_START;
 
-void printf(const char *message, ...)
+void print(const char *message, ...)
 {
 	va_list ap;
 	va_start(ap, message);
@@ -28,21 +28,22 @@ void printf(const char *message, ...)
 		} else {
 			if (message[i] == '%' && i < len - 1) {
 				char t = message[++i];
-				if(t == 'c'){
+				if (t == 'c') {
 					char c = va_arg(ap, char);
 					char str[2];
 					str[0] = c;
 					str[1] = 0;
-					printf(str);
+					print(str);
 					cursor--;
-				}else if(t == 's'){
+				} else if (t == 's') {
 					char *s = va_arg(ap, char*);
-					printf(s);
-				}else if(t == 'd'){
+					print(s);
+				} else if (t == 'd') {
 					uint32_t i = va_arg(ap, uint32_t);
 					char *s = itos(i);
-					printf(s);
-				}
+					print(s);
+					cursor--;
+				} 
 			} else {
 				put(message[i]);
 			}
@@ -56,7 +57,8 @@ void printf(const char *message, ...)
 	va_end(ap);
 }
 
-void put(char c){
+void put(char c)
+{
 	video_map[cursor].attribute = 0x07;
 	video_map[cursor].print = c;
 }
