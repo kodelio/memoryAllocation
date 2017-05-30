@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 #include "memory.h"
 
@@ -15,6 +10,7 @@ typedef struct s_block s_block;
 struct s_block {
 	size_t size;
 	s_block *next;
+	s_block *prev;
 	int free;
 };
 
@@ -34,6 +30,7 @@ char *memloc(size_t size)
 		start = (s_block*) & heap[0];
 		start->free = 1;
 		start->next = NULL;
+		start->prev = &start;
 		start->size = 0;
 	}
 
@@ -61,6 +58,7 @@ char *memloc(size_t size)
 		s_block *metadata = (s_block*) (nwptr + pos->size);
 		metadata->free = 0;
 		metadata->next = NULL;
+		metadata->prev = pos;
 		metadata->size = size;
 		pos->next = metadata;
 		return(char*) (metadata + 1);
@@ -71,7 +69,22 @@ int memfree(char* ptr)
 {
 	s_block *metadata = (s_block*) (ptr - sizeof(s_block));
 	metadata->free = 1;
+	//Try to merge block if possible
+	if (metadata->next != NULL && metadata->next->free) {
+		s_block *shrink = metadata->next;
+		metadata->next = shrink->next;
+		if (metadata->next != NULL) {
+			metadata->size += shrink->size + sizeof(s_block);
+		}
 
+	}
+	if (metadata->prev->free) {
+		s_block *grow = metadata->prev;
+		grow->next = metadata->next;
+		if (grow->next != NULL) {
+			grow->size += metadata->size + sizeof(s_block);
+		}
+	}
 	return 0;
 }
 
